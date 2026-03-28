@@ -1,5 +1,15 @@
+variable "image" {
+  description = "Docker image to deploy"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
 resource "aws_ecs_cluster" "main" {
-  name = "platform-cluster"
+  name = "platform-cluster-${var.environment}"
 }
 
 resource "aws_ecs_task_definition" "app" {
@@ -12,7 +22,7 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = jsonencode([
     {
       name      = "app"
-      image     = "ghcr.io/prayasvadlakonda/platform-cicd-system:latest"
+      image     = var.image
       essential = true
       portMappings = [
         {
